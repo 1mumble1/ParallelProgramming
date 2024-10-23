@@ -65,12 +65,14 @@ int main()
 		handles[i] = CreateThread(NULL, 0, &ThreadProc, &threadNumbers[i], 0, NULL);
 	}
 
-	if (!SetThreadPriority(handles[0], THREAD_PRIORITY_HIGHEST)) {
+	if (!SetThreadPriority(handles[0], THREAD_PRIORITY_HIGHEST))
+	{
 		std::cerr << "Error setting thread priority" << std::endl;
 		return 1;
 	}
 
-	if (!SetThreadPriority(handles[1], THREAD_PRIORITY_NORMAL)) {
+	if (!SetThreadPriority(handles[1], THREAD_PRIORITY_NORMAL))
+	{
 		std::cerr << "Error setting thread priority" << std::endl;
 		return 1;
 	}
