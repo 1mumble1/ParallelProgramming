@@ -23,7 +23,6 @@ DWORD WINAPI ThreadProc(CONST LPVOID lpParam)
 		{
 			for (int k = 0; k < 10'000; k++)
 			{
-
 			}
 		}
 
@@ -62,10 +61,10 @@ int main()
 	for (int i = 0; i < countOfThreads; i++)
 	{
 		threadNumbers[i] = i + 1;
-		handles[i] = CreateThread(NULL, 0, &ThreadProc, &threadNumbers[i], 0, NULL);
+		handles[i] = CreateThread(NULL, 0, &ThreadProc, &threadNumbers[i], CREATE_SUSPENDED, NULL);
 	}
 
-	if (!SetThreadPriority(handles[0], THREAD_PRIORITY_HIGHEST))
+	if (!SetThreadPriority(handles[0], THREAD_PRIORITY_NORMAL))
 	{
 		std::cerr << "Error setting thread priority" << std::endl;
 		return 1;
@@ -77,10 +76,15 @@ int main()
 		return 1;
 	}
 
+	for (int i = 0; i < countOfThreads; i++)
+	{
+		ResumeThread(handles[i]);
+	}
+
 	// ожидание окончания работы потоков
 	WaitForMultipleObjects(countOfThreads, handles, true, INFINITE);
 
-	for (int i = 0; i < countOfThreads; ++i)
+	for (int i = 0; i < countOfThreads; i++)
 	{
 		CloseHandle(handles[i]);
 	}
