@@ -103,10 +103,9 @@ void ProcessImage(const std::string& inputPath, const std::string& outputPath, i
     }
 
     std::ofstream log("log.txt");
-    const int maxSizeTime = 15;
     for (int i = 0; i < numThreads; ++i)
     {
-        for (int j = 0; j < durations[i].size() /*&& j < maxSizeTime*/; j++)
+        for (int j = 0; j < durations[i].size(); j++)
         {
             //запись в файлы
             log << /*i << " " <<*/ durations[i][j] << std::endl;
