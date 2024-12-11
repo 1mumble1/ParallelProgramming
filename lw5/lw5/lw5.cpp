@@ -8,18 +8,27 @@
 HANDLE FileMutex;
 
 int ReadFromFile() {
+    WaitForSingleObject(FileMutex, INFINITE);
+    //EnterCriticalSection(&FileLockingCriticalSection);
     std::fstream myfile("balance.txt", std::ios_base::in);
     int result;
     myfile >> result;
     myfile.close();
+    //LeaveCriticalSection(&FileLockingCriticalSection);
+    ReleaseMutex(FileMutex);
 
     return result;
 }
 
 void WriteToFile(int data) {
+
+    WaitForSingleObject(FileMutex, INFINITE);
+    //EnterCriticalSection(&FileLockingCriticalSection);
     std::fstream myfile("balance.txt", std::ios_base::out);
     myfile << data << std::endl;
     myfile.close();
+    //LeaveCriticalSection(&FileLockingCriticalSection);
+    ReleaseMutex(FileMutex);
 }
 
 int GetBalance() {
@@ -36,6 +45,8 @@ void Deposit(int money) {
     WriteToFile(balance);
 
     //LeaveCriticalSection(&FileLockingCriticalSection);
+    ReleaseMutex(FileMutex);
+
     printf("Balance after deposit: %d\n", balance);
 }
 
@@ -45,6 +56,7 @@ void Withdraw(int money) {
     int balance = GetBalance();
     if (balance < money) {
         //LeaveCriticalSection(&FileLockingCriticalSection);
+        ReleaseMutex(FileMutex);
         printf("Cannot withdraw money, balance lower than %d\n", money);
         return;
     }
@@ -53,6 +65,8 @@ void Withdraw(int money) {
     balance -= money;
     WriteToFile(balance);
     //LeaveCriticalSection(&FileLockingCriticalSection);
+    ReleaseMutex(FileMutex);
+
     printf("Balance after withdraw: %d\n", balance);
 }
 
@@ -70,7 +84,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
     HANDLE* handles = new HANDLE[49];
 
     //InitializeCriticalSection(&FileLockingCriticalSection);
-    FileMutex = CreateMutex(NULL, FALSE, NULL);
+    FileMutex = CreateMutex(NULL, FALSE, L"FileMutex");
     if (FileMutex == NULL) {
         return -1;
     }
