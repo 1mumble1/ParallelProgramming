@@ -1,0 +1,16 @@
+1) simple 'for':
+PI: 3.14159
+Time: 3.28629
+
+2) parallel 'for' (wrong version):
+PI: 3.15522
+Time: 3.93808
+
+3) parallel 'for' with atomic:
+PI: 3.14159
+Time: 61.6846
+
+4) parallel 'for' with reduction:
+PI: 3.14159
+Time: 0.685199
+
